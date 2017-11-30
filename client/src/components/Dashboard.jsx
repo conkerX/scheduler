@@ -109,8 +109,8 @@ function mapStateToProps(state) {
         schedules[e.user_id].push(e.day_part_id);
       }
     });
-       
-    for (const sched of schedules) {
+
+    for (let sched in schedules) {
       const schedObj = {};
       if (sched === 'HOUSE') {
         schedObj.name = 'HOUSE';
