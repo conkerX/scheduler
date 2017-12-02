@@ -86,5 +86,4 @@ neededEmployees = neededEmployees.map((numEmployees, i) => ({
   day_part_id: i + 1,
 }));
 
-console.log('neededEmployees: ', neededEmployees);
 module.exports.Needed_Employee = neededEmployees;
