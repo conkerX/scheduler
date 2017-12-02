@@ -81,6 +81,7 @@ app.put('/update_profile', utils.updateProfile, (req, res) => {
 
 app.get('/welcome_back',
   utils.redirectIfLoggedIn,
+  utils.getUser,
   utils.getAllDayParts,
   utils.getAllUsers,
   utils.getAllActualSchedules,
@@ -90,6 +91,7 @@ app.get('/welcome_back',
   utils.getAllNeededEmployees,
   (req, res) => {
     let obj = {};
+    obj.user = req.user;
     obj.dayParts = req.dayParts;
     obj.view = 'employeeEditor';
     obj.scheduleActual = req.actual_schedules;

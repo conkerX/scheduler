@@ -178,7 +178,6 @@ const selectWeek = (monDate) => {
 
 const editProfile = (data) => {
   const response = axios.put('/update_profile', { data });
-
   return {
     type: 'RENDER_EDIT',
   };

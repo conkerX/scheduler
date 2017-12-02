@@ -290,6 +290,7 @@ const redirectIfLoggedIn = (req, res, next) => {
 const sendEmployeeInfo = (req, res, next) => {
   if (req.session.role === 'employee') {
     let obj = {};
+    obj.user = req.user;
     obj.dayParts = req.dayParts;
     obj.users = req.users.filter((user) => {
       return user.dataValues.name === req.session.user;
@@ -324,11 +325,8 @@ const destroySession = (req, res, next) => {
 
 module.exports = {
   passHash,
-<<<<<<< HEAD
-=======
   updateProfile: updateProfile,
   getUser: getUser,
->>>>>>> add editing feature to profile container
   destroySession: destroySession,
   sendEmployeeInfo: sendEmployeeInfo,
   getAllActualSchedules: getAllActualSchedules,

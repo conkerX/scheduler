@@ -14,7 +14,7 @@ import Login from './Login.jsx';
 import SignUp from './SignUp.jsx';
 import Home from '../components/Home.jsx';
 import Dashboard from '../components/Dashboard.jsx';
-import PersonalInformation from '../components/PersonalInformation.jsx';
+import PersonalInformation from './Profile.jsx';
 import PrivateRoute from './PrivateRoute.jsx';
 
 class App extends Component {

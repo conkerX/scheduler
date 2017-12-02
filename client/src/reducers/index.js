@@ -8,8 +8,10 @@ import ScheduleActual from './reducer-schedule-actual.js';
 import SelectedWeekReducer from './reducer-selected-week.js';
 import View from './reducer-view.js';
 import FlashMessage from './reducer-flash-message.js';
+import User from './reducer-user.js';
 
 const rootReducer = combineReducers({
+  user: User,
   flashMessage: FlashMessage,
   employeeAvailabilities: EmployeeAvailabilitiesReducer,
   scheduleActual: ScheduleActual,
