@@ -24,7 +24,7 @@ describe('Shiftly Backend Test Spec', () => {
   let db;
 
   before((done) => {
-    sequelize = new Sequelize(process.env.DB_NAME || 'shiftly', process.env.DB_USER || 'postgres', process.env.DB_PASS || null, { host: process.env.DB_HOST || 'localhost', dialect: 'postgres' });
+    sequelize = new Sequelize(process.env.DB_NAME || 'shiftly', process.env.DB_USER || 'postgres', process.env.DB_PASS || null, { host: process.env.DB_HOST || 'localhost', dialect: 'postgres', logging: false });
     // debugger
     db = schema(sequelize);
     db.User.hasMany(db.Actual_Schedule, { as: 'actual_schedule' });
@@ -255,7 +255,7 @@ describe('Shiftly Backend Test Spec', () => {
 
     const result = algo.scheduleGenerator(allEmployeeAvail, temp);
 
-    it('algo should return an array', () => {
+    it('algo should return an object', () => {
       expect(result).to.be.a('object');
     });
 

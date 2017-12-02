@@ -3,10 +3,11 @@ const config = require('./config.js');
 const Promise = require('bluebird');
 require('dotenv').config();
 
+const options = { logging: false };
 
 const sequelize = process.env.DATABASE_URL ?
-  new Sequelize(process.env.DATABASE_URL) :
-  new Sequelize(process.env.DB_NAME || 'shiftly', process.env.DB_USER || 'postgres', process.env.DB_PASS || null, { host: process.env.DB_HOST || 'localhost', dialect: 'postgres' });
+  new Sequelize(process.env.DATABASE_URL, options) :
+  new Sequelize(process.env.DB_NAME || 'shiftly', process.env.DB_USER || 'postgres', process.env.DB_PASS || null, { host: process.env.DB_HOST || 'localhost', dialect: 'postgres', logging: false });
 
 
 const db = config(sequelize);

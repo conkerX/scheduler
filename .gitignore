@@ -31,3 +31,4 @@ bower_components/
 package-lock.json
 .env
 client/dist/compiled/bundle.js
+workspace/
