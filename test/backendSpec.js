@@ -256,7 +256,7 @@ describe('Shiftly Backend Test Spec', () => {
     const result = algo.scheduleGenerator(allEmployeeAvail, temp);
 
     it('algo should return an array', () => {
-      expect(result).to.be.a('object');
+      expect(result).to.be.a('array');
     });
 
     it('algo should schedule exactly as many servers as specified', () => {

@@ -46,99 +46,6 @@ const templateParser = (weekStart) => {
     });
 };
 
-// const scheduleGenerator = (allEmployeeAvail, temp) => {
-//   const allCombinations = {};
-//   // fill allCombinations with all the possible combinations of employees for each day
-//   for (const dayPart in temp) {
-//     // if no one is needed for the shift
-//     if (temp[dayPart] === 0) {
-//       allCombinations[dayPart] = [[]];
-//     } else {
-//       // if employees needed but no one is available, add blank arr
-//       if (!allEmployeeAvail[dayPart]) {
-//         allEmployeeAvail[dayPart] = [];
-//       }
-//       if (allEmployeeAvail[dayPart].length < temp[dayPart]) {
-//         const numOfAvailEmployees = allEmployeeAvail[dayPart].length;
-//         for (let i = 0; i < temp[dayPart] - numOfAvailEmployees; i++) {
-//           allEmployeeAvail[dayPart].push('house');
-//         }
-//       }
-//       allCombinations[dayPart] = Combinatorics
-//         .combination(allEmployeeAvail[dayPart], temp[dayPart])
-//         .toArray();
-//     }
-//   }
-
-//   let schedule = {};
-//   const cheapSolution = [];
-//   const completedSchedules = [];
-
-//   const findCheapSolution = (possibilities) => {
-//     let rocker = true;
-//     for (const dayPart in possibilities) {
-//       schedule[dayPart] = rocker ?
-//         possibilities[dayPart][0] :
-//         possibilities[dayPart][possibilities[dayPart].length - 1];
-//       rocker = !rocker;
-//     }
-//     const completed = Object.assign({}, schedule);
-//     cheapSolution.push(completed);
-//   };
-//   const findSolution = (possibilities, empShifts, dayPart) => {
-//     // for every dayPart
-//     const currentDayPossibilities = possibilities[dayPart];
-//     // iterate over all possibilites
-//     // for every possibility
-//     for (let i = 0; i < currentDayPossibilities.length; i++) {
-//       if (completedSchedules.length >= 10) { return; }
-//       const thisTry = currentDayPossibilities[i];
-//       // add employee shifts to the counter
-//       if (!willAnyEmployeeBeInOvertime(empShifts, thisTry) && !willHaveDouble(schedule[dayPart-1], thisTry)) {
-//         thisTry.forEach((e) => {
-//           empShifts[e] = empShifts[e] ? empShifts[e] + 1 : 1;
-//         });
-//         schedule[dayPart] = thisTry;
-//         if (dayPart < 14) {
-//          findSolution(possibilities, empShifts, dayPart+1);
-//         } else {
-//           const completed = Object.assign({}, schedule);
-//           completedSchedules.push(completed);
-//         }
-//         schedule[dayPart] = [];
-//         thisTry.forEach((e) => {
-//           empShifts[e]--;
-//         });
-//       }
-//     }
-//   };
-//   findCheapSolution(allCombinations);
-//   schedule = {};
-//   findSolution(allCombinations, {}, 1);
-//   return completedSchedules.length ?
-//     completedSchedules[Math.floor(Math.random() * completedSchedules.length)] :
-//     cheapSolution[0];
-// };
-
-// const willAnyEmployeeBeInOvertime = (shiftCounts, proposedShift) => {
-//   let overtime = false;
-//   proposedShift.forEach((e) => {
-//     if (shiftCounts[e] >= 6) {
-//       overtime = true;
-//     }
-//   });
-//   return overtime;
-// };
-
-// const willHaveDouble = (amShift = [], pmShift) => {
-//   for (let i = 0; i < amShift.length; i++) {
-//     if (pmShift.includes(amShift[i])) {
-//       return true;
-//     }
-//   }
-//   return false;
-// };
-
 function scheduleGenerator(allEmployeeAvail, temp) {
   // reduce helpers
   const max = (acc, val) => (val > acc ? val : acc);
@@ -163,6 +70,14 @@ function scheduleGenerator(allEmployeeAvail, temp) {
     availabilities[i].length - numEmployeesNeeded
   ));
 
+  const houseShifts = (new Array(14)).fill(0);
+  diffs.forEach((diff, i) => {
+    if (diff < 0) {
+      shiftNeeds[i] += diff;
+      houseShifts[i] = -diff;
+    }
+  });
+
   const shiftsByDiff = diffs
     .map((diff, i) => [diff, i])
     .sort((a, b) => {
@@ -183,11 +98,10 @@ function scheduleGenerator(allEmployeeAvail, temp) {
     shifts.push(index);
     index -= 1;
   }
-  // console.log(shifts);
 
-  if (diffs.reduce((acc, val) => (acc || val < 0), false)) {
-    return false;
-  }
+  // if (diffs.reduce((acc, val) => (acc || val < 0), false)) {
+  //   return false;
+  // }
 
   const allCombos = availabilities.map((availability, i) => (
     Combinatorics
@@ -296,11 +210,14 @@ function scheduleGenerator(allEmployeeAvail, temp) {
     schedule.hasOvertime = true;
     finalSolution = solve();
   }
+  if (!finalSolution) {
+    return false;
+  }
 
   // console.log(schedule.hasDoubles);
   // console.log(schedule.hasOvertime);
 
-  return finalSolution && finalSolution
+  const output = finalSolution
     .plan.map((shift) => {
       const out = [];
       shift.forEach((working, i) => {
@@ -310,6 +227,18 @@ function scheduleGenerator(allEmployeeAvail, temp) {
       });
       return out;
     });
+
+  houseShifts.forEach((numHouseshifts, i) => {
+    let n = numHouseshifts;
+    while (n > 0) {
+      output[i].push('house');
+      n -= 1;
+    }
+  });
+
+  output.unshift(null);
+
+  return output;
 }
 
 const reformatScheduleObj = (actual_schedule, schedule_id) => {
