@@ -210,23 +210,32 @@ function scheduleGenerator(allEmployeeAvail, temp) {
     schedule.hasOvertime = true;
     finalSolution = solve();
   }
-  if (!finalSolution) {
-    return false;
-  }
+
 
   // console.log(schedule.hasDoubles);
   // console.log(schedule.hasOvertime);
 
-  const preOutput = finalSolution
-    .plan.map((shift) => {
-      const out = [];
-      shift.forEach((working, i) => {
-        if (working) {
-          out.push(i);
-        }
+  let preOutput;
+  if (finalSolution) {
+    preOutput = finalSolution
+      .plan.map((shift) => {
+        const out = [];
+        shift.forEach((working, i) => {
+          if (working) {
+            out.push(i);
+          }
+        });
+        return out;
       });
-      return out;
+  } else {
+    // cheap solution
+    preOutput = availabilities.map((availability, i) => {
+      if (i % 2 === 0) {
+        return availability.slice(0, shiftNeeds[i].length);
+      }
+      return availability.slice(availability.length - shiftNeeds[i].length);
     });
+  }
 
   houseShifts.forEach((numHouseshifts, i) => {
     let n = numHouseshifts;

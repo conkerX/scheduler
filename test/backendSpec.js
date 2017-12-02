@@ -236,6 +236,23 @@ describe('Shiftly Backend Test Spec', () => {
       14: [ 2, 4, 5, 6, 7 ],
     };
 
+    const noSolutionAvail = {
+      1: [1, 2, 3],
+      2: [1, 5, 7, 8],
+      3: [1, 2, 4, 6, 8, 9, 10],
+      4: [2, 3],
+      5: [1, 2, 3, 4, 5],
+      6: [2, 3, 4, 5],
+      7: [1, 2, 3, 4, 6, 7],
+      8: [1, 2, 6, 7, 8],
+      9: [1, 8, 9, 10],
+      10: [1, 2, 3, 4, 10],
+      11: [2, 3, 5, 7, 8],
+      12: [1, 4, 5, 7, 8],
+      13: [3, 4, 5, 7, 9],
+      14: [1, 6, 8, 9, 10],
+    };
+
     const temp = {
       '1': 1,
       '2': 2,
@@ -254,8 +271,13 @@ describe('Shiftly Backend Test Spec', () => {
     };
 
     const result = algo.scheduleGenerator(allEmployeeAvail, temp);
+    const cheapResult = algo.scheduleGenerator(noSolutionAvail, temp);
 
     it('algo should return an object', () => {
+      expect(result).to.be.a('object');
+    });
+
+    it('algo should return cheap solution when it can\'t solve via algo', () => {
       expect(result).to.be.a('object');
     });
 
