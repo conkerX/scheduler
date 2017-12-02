@@ -74,6 +74,11 @@ app.post('/logout', utils.destroySession, (req, res) => {
   res.status(200).end();
 });
 
+app.put('/update_profile', utils.updateProfile, (req, res) => {
+  console.log('its in put');
+  res.status(200).end();
+});
+
 app.get('/welcome_back',
   utils.redirectIfLoggedIn,
   utils.getAllDayParts,

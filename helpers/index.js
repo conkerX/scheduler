@@ -13,6 +13,32 @@ const getAllUsers = (req, res, next) => {
     });
 };
 
+const getUser = (req, res, next) => {
+  db.User.findAll({
+    where: {
+      name: req.session.user,
+    },
+  }).then((user) => {
+    req.user = user[0].dataValues;
+    next();
+  }).catch((err) => {
+    res.status(500).send('Erro getting user');
+  });
+};
+
+const updateProfile = (req, res, next) => {
+  console.log(req.body.data);
+  db.User.update(req.body.data, {
+    where: {
+      name: req.body.data.name,
+    },
+  }).then((user) => {
+    next();
+  }).catch((err) => {
+    res.status(500).send('Error updating user');
+  })
+}
+
 const getAllScheduleDates = (req, res, next) => {
   db.Schedule.findAll({})
     .then((allScheduleDates) => {
@@ -298,6 +324,11 @@ const destroySession = (req, res, next) => {
 
 module.exports = {
   passHash,
+<<<<<<< HEAD
+=======
+  updateProfile: updateProfile,
+  getUser: getUser,
+>>>>>>> add editing feature to profile container
   destroySession: destroySession,
   sendEmployeeInfo: sendEmployeeInfo,
   getAllActualSchedules: getAllActualSchedules,
