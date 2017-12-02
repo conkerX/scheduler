@@ -19,6 +19,12 @@ h4 {
   font-weight: 100;
 }
 
+a {
+  color: rgba(0,0,0,.75);;
+  text-decoration: none;
+}
+
+
 .app-container {
   width: 100%;
 }
@@ -376,4 +382,31 @@ h4 {
     width: 100%;
     margin: 0;
   }
+}
+
+/* Custom buttons */
+
+.home-button {
+    margin: 20px;
+    display: inline-block;
+}
+
+.home-button .child {
+    margin: auto;
+    text-align: center;
+    display: table;
+    border: 2px solid rgb(23, 150, 135);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgb(25, 164, 150);
+    font-family: sans-serif;
+}
+
+.home-button a {
+    vertical-align: middle;
+    display: table-cell;
+    font-size: larger;
+    text-decoration: none;
+    color: white;
 }
