@@ -13,13 +13,13 @@ const Main = () => (
   <div>
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route exact path="/dashboard" component={Home} />
         <Route exact path="/schedule" component={Dashboard} />
         <Route exact path="/personal/information" component={PersonalInformation} />
       </Switch>
     </BrowserRouter>
   </div>
-);
+)
 
-  // <Route exact path="/" component={Home} />
+// <Route exact path="/" component={Home} />
 export default Main;

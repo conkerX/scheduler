@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-import { 
+import { BrowserRouter, Link, Switch, Route } from 'react-router-dom';
+import {
   changeView,
   checkedIfLoggedIn,
-  logout } from '../actions/index';
+  logout,
+  goHome } from '../actions/index';
 import PropTypes from 'prop-types';
-import Dashboard from '../components/Dashboard.jsx';
+// import Dashboard from '../components/Dashboard.jsx';
 import FlashMessage from '../components/FlashMessage.jsx';
 import Login from './Login.jsx';
 import SignUp from './SignUp.jsx';
 import Main from '../components/Main.jsx';
+import Home from '../components/Home.jsx';
+import Dashboard from '../components/Dashboard.jsx';
+import PersonalInformation from '../components/PersonalInformation.jsx';
 
 class App extends Component {
 
@@ -33,8 +37,10 @@ class App extends Component {
     } else if (this.props.view === 'signup') {
       return <SignUp />;
     } else if (this.props.view === 'employeeEditor' || this.props.view === 'scheduleEditor') {
-      return <Main />;
+      return <Link to="/"></Link>;
       // return <Dashboard />;
+    } else if (this.props.view === 'home') {
+      return <Route exact path="/" component={Home} />;
     }
     return <div />;
   }
@@ -54,9 +60,11 @@ class App extends Component {
     }
     return (
       <div>
-        <div className="nav-item nav-Dashboard" onClick={() => {this.props.changeView('employeeEditor'); this.renderView()}}>
+
+        <div className="nav-item nav-dashboard" onClick={() => { this.props.goHome('home') }}>
           Dashboard
         </div>
+
         <div className="nav-item nav-logout" onClick={() => { this.props.logout() }}>
           Log out
         </div>
@@ -80,6 +88,15 @@ class App extends Component {
         </div>
         { this.renderFlashMessage() }
         { this.renderView() }
+
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/schedule" component={Dashboard} />
+            <Route exact path="/personal/information" component={PersonalInformation} />
+          </Switch>
+        </BrowserRouter>
+
       </div>
     );
   }
@@ -99,6 +116,7 @@ function mapDispatchToProps(dispatch) {
     checkedIfLoggedIn,
     changeView,
     logout,
+    goHome,
   }, dispatch);
 }
 

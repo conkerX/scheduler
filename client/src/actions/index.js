@@ -146,11 +146,18 @@ const signUp = (creds) => {
 };
 
 const logout = () => {
-const response = axios.post('/logout');
+  const response = axios.post('/logout');
 
   return {
     type: 'REMOVE_LOGGED_IN_DETAILS',
     payload: response,
+  }
+};
+
+const goHome = (newView) => {
+  return {
+    type: 'CHANGE_VIEW',
+    view: newView,
   }
 };
 
@@ -170,6 +177,7 @@ const selectWeek = (monDate) => {
 };
 
 module.exports = {
+  goHome,
   logout,
   checkedIfLoggedIn,
   generateSchedule,
