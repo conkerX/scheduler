@@ -12,10 +12,10 @@ import PropTypes from 'prop-types';
 import FlashMessage from '../components/FlashMessage.jsx';
 import Login from './Login.jsx';
 import SignUp from './SignUp.jsx';
-import Main from '../components/Main.jsx';
 import Home from '../components/Home.jsx';
 import Dashboard from '../components/Dashboard.jsx';
 import PersonalInformation from '../components/PersonalInformation.jsx';
+import PrivateRoute from './PrivateRoute.jsx';
 
 class App extends Component {
 
@@ -31,29 +31,17 @@ class App extends Component {
     }
   }
 
-  renderView() {
-    if (this.props.view === 'login') {
-      return <Login />;
-    } else if (this.props.view === 'signup') {
-      return <SignUp />;
-    } else if (this.props.view === 'employeeEditor' || this.props.view === 'scheduleEditor') {
-      return <Link to="/"></Link>;
-      // return <Dashboard />;
-    } else if (this.props.view === 'home') {
-      return <Route exact path="/" component={Home} />;
-    }
-    return <div />;
-  }
+
 
   renderNav() {
     if(!this.props.users) {
       return (
         <div>
-          <div className="nav-item nav-login" onClick={() => { this.props.changeView('login')}}>
-            Log in
+          <div className="nav-item nav-login">
+            <Link to="/login">Log in</Link>
           </div>
-          <div className="nav-item nav-signup" onClick={() => { this.props.changeView('signup')}}>
-            Sign up
+          <div className="nav-item nav-signup">
+            <Link to="/signup">Sign up</Link>
           </div>
         </div>
       );
@@ -61,8 +49,8 @@ class App extends Component {
     return (
       <div>
 
-        <div className="nav-item nav-dashboard" onClick={() => { this.props.goHome('home') }}>
-          Dashboard
+        <div className="nav-item nav-dashboard">
+          <Link to="/">Dashboard</Link>
         </div>
 
         <div className="nav-item nav-logout" onClick={() => { this.props.logout() }}>
@@ -74,30 +62,31 @@ class App extends Component {
 
   render() {
     return (
-      <div className="app-container clear-fix">
-        <div className="navbar clear-fix">
-          <div className="nav-left">
-            <div className="nav-item nav-logo">
-              <i className="material-icons shiftly-icon">recent_actors</i>
-               Shiftly
+      <BrowserRouter>
+        <div className="app-container clear-fix">
+          <div className="navbar clear-fix">
+            <div className="nav-left">
+              <div className="nav-item nav-logo">
+                <i className="material-icons shiftly-icon">recent_actors</i>
+                Aeon
+              </div>
+            </div>
+            <div className="nav-right">
+              { this.renderNav() }
             </div>
           </div>
-          <div className="nav-right">
-            { this.renderNav() }
-          </div>
-        </div>
-        { this.renderFlashMessage() }
-        { this.renderView() }
+          { this.renderFlashMessage() }
 
-        <BrowserRouter>
           <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/schedule" component={Dashboard} />
-            <Route exact path="/personal/information" component={PersonalInformation} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/signup" component={SignUp} />
+            <PrivateRoute exact path="/" component={Home} />
+            <PrivateRoute exact path="/schedule" component={Dashboard} />
+            <PrivateRoute exact path="/personal/information" component={PersonalInformation} />
           </Switch>
-        </BrowserRouter>
 
-      </div>
+        </div>
+      </BrowserRouter>
     );
   }
 }
