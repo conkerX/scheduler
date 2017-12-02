@@ -54,8 +54,8 @@ function scheduleGenerator(allEmployeeAvail, temp) {
 
   // convert objects to arrays to access array methods
   const availabilities = [];
-  for (const i in allEmployeeAvail) {
-    availabilities[i - 1] = allEmployeeAvail[i];
+  for (let i = 0; i < 14; i += 1) {
+    availabilities[i] = allEmployeeAvail[i + 1] || [];
   }
 
   const shiftNeeds = [];
@@ -63,7 +63,7 @@ function scheduleGenerator(allEmployeeAvail, temp) {
     shiftNeeds[i - 1] = temp[i];
   }
 
-  const numEmployees = availabilities.map(shift => shift.reduce(max)).reduce(max);
+  const numEmployees = availabilities.map(shift => shift.reduce(max, 0)).reduce(max);
 
   // sort shifts by diff between num of employees needed and num of employees available
   const diffs = shiftNeeds.map((numEmployeesNeeded, i) => (
@@ -103,11 +103,12 @@ function scheduleGenerator(allEmployeeAvail, temp) {
   //   return false;
   // }
 
-  const allCombos = availabilities.map((availability, i) => (
-    Combinatorics
+  const allCombos = availabilities.map((availability, i) => {
+    if (availability.length === 0) return [[]];
+    return Combinatorics
       .combination(availability, shiftNeeds[i])
-      .toArray()
-  ));
+      .toArray();
+  });
 
   const initialPlan = [];
   for (let i = 0; i < 14; i += 1) {
@@ -200,7 +201,6 @@ function scheduleGenerator(allEmployeeAvail, temp) {
     return false;
   };
 
-
   let finalSolution = solve();
   if (!finalSolution) {
     schedule.hasDoubles = true;
@@ -217,7 +217,7 @@ function scheduleGenerator(allEmployeeAvail, temp) {
   // console.log(schedule.hasDoubles);
   // console.log(schedule.hasOvertime);
 
-  const output = finalSolution
+  const preOutput = finalSolution
     .plan.map((shift) => {
       const out = [];
       shift.forEach((working, i) => {
@@ -231,17 +231,21 @@ function scheduleGenerator(allEmployeeAvail, temp) {
   houseShifts.forEach((numHouseshifts, i) => {
     let n = numHouseshifts;
     while (n > 0) {
-      output[i].push('house');
+      preOutput[i].push('house');
       n -= 1;
     }
   });
 
-  output.unshift(null);
+  const output = {};
+  preOutput.forEach((val, i) => {
+    output[i + 1] = val;
+  });
 
   return output;
 }
 
 const reformatScheduleObj = (actual_schedule, schedule_id) => {
+  console.log(actual_schedule);
   const reformat = [];
   for (const dayPart in actual_schedule) {
     actual_schedule[dayPart].forEach((employee) => {
